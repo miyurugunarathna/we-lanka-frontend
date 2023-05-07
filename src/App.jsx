@@ -2,7 +2,15 @@ import "./index.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
-import { Login, Register, Home, ListLocation, ListProduct } from "./pages";
+import {
+  Login,
+  Register,
+  Home,
+  ListLocation,
+  ListProduct,
+  Cart,
+  Order,
+} from "./pages";
 
 const App = () => {
   return (
@@ -20,6 +28,9 @@ const App = () => {
 
           {/* Products */}
           <Route path="/products" element={<ListProduct />} />
+
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Order />} />
         </Routes>
       </Router>
     </Provider>
