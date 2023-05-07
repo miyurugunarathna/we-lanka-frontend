@@ -14,6 +14,14 @@ import {
   ListInventoryForAdmin,
   ListProductForAdmin,
   ListCategoryForAdmin,
+  CreateCategoryForAdmin,
+  CreateProductForAdmin,
+  CreateLocationForAdmin,
+  CreateInventoryForAdmin,
+  EditInventoryDetailForAdmin,
+  EditProductForAdmin,
+  EditCategoryForAdmin,
+  EditLocationForAdmin,
 } from "./pages";
 
 const App = () => {
@@ -45,10 +53,30 @@ const App = () => {
             element={<ListInventoryForAdmin />}
           />
 
+          <Route
+            path="/super-admin/inventories/add"
+            element={<CreateInventoryForAdmin />}
+          />
+
+          <Route
+            path="/super-admin/inventorys/:id"
+            element={<EditInventoryDetailForAdmin />}
+          />
+
           {/* Products */}
           <Route
             path="/super-admin/products"
             element={<ListProductForAdmin />}
+          />
+
+          <Route
+            path="/super-admin/products/add"
+            element={<CreateProductForAdmin />}
+          />
+
+          <Route
+            path="/super-admin/products/:id"
+            element={<EditProductForAdmin />}
           />
 
           {/* Location */}
@@ -57,10 +85,30 @@ const App = () => {
             element={<ListLocationForAdmin />}
           />
 
+          <Route
+            path="/super-admin/locations/add"
+            element={<CreateLocationForAdmin />}
+          />
+
+          <Route
+            path="/super-admin/locations/:id"
+            element={<EditLocationForAdmin />}
+          />
+
           {/* Categories */}
           <Route
             path="/super-admin/categories"
             element={<ListCategoryForAdmin />}
+          />
+
+          <Route
+            path="/super-admin/categories/add"
+            element={<CreateCategoryForAdmin />}
+          />
+
+          <Route
+            path="/super-admin/categories/:id"
+            element={<EditCategoryForAdmin />}
           />
         </Routes>
       </Router>

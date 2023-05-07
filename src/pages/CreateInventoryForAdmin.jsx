@@ -8,7 +8,7 @@ import useFetchUserProfile from "../hooks/useFetchUserProfile";
 
 import { SUCCESS } from "../constants";
 
-export const EditInventoryDetailForAdmin = () => {
+export const CreateInventoryForAdmin = () => {
   const [role, setRole] = useState(null);
   let navigate = useNavigate();
   const state = useSelector((state) => state.user);
@@ -114,7 +114,7 @@ export const EditInventoryDetailForAdmin = () => {
           <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <form className="w-full" onSubmit={handleRegister}>
               <h1 className="mb-4 text-xl text-center tracking-tight font-semibold text-black">
-                <span className="font-normal">Edit Inventory</span>
+                <span className="font-normal">Add Inventory</span>
               </h1>
               <hr className="opacity-10 mb-4" />
               {inputs.map((i, key) =>
@@ -145,7 +145,7 @@ export const EditInventoryDetailForAdmin = () => {
               )}
 
               <button className="mt-8 py-2 rounded text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-50 w-full">
-                Update
+                Add
               </button>
               <button className="mt-8 py-2 rounded text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring focus:ring-gray-900 focus:ring-opacity-50 w-full">
                 Go back

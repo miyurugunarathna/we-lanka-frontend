@@ -18,9 +18,18 @@ const viewCategoryById = async (id) => {
   }
 };
 
+const createCategory = async () => {
+  try {
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const categoryRequest = {
   viewCategories,
   viewCategoryById,
+  createCategory,
 };
 
 export default categoryRequest;
