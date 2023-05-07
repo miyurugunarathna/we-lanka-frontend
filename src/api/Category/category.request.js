@@ -18,9 +18,19 @@ const viewCategoryById = async (id) => {
   }
 };
 
+const createCategory = async (data) => {
+  try {
+    const response = await apiInstance.get(`/api/categories/${data}`);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const categoryRequest = {
   viewCategories,
   viewCategoryById,
+  createCategory,
 };
 
 export default categoryRequest;

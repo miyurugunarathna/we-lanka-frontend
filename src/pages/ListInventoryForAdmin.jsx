@@ -9,7 +9,11 @@ export const ListInventoryForAdmin = () => {
   const [inventories, setInventories] = useState([]);
 
   const navigateToEditInventory = (id) => {
-    navigate(`/inventory/${id}`);
+    navigate(`/super-admin/inventorys/${id}`);
+  };
+
+  const navigateToAddInventory = () => {
+    navigate(`/super-admin/inventories/add`);
   };
 
   useEffect(() => {
@@ -25,9 +29,16 @@ export const ListInventoryForAdmin = () => {
 
   return (
     <div>
-      <div className="min-h-screen flex flex-col justify-center items-center antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
-        <h2 className="text-lg font-medium mb-2 p-3">Inventories</h2>
-        <div className="bg-white shadow-lg rounded-lg p-10 w-full ml-5 mr-5">
+      <div className="min-h-screen flex flex-col antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
+        <button
+          onClick={navigateToAddInventory}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-20 m-10">
+          Add new
+        </button>
+        <h2 className="text-lg font-medium mb-2 p-3 text-center">
+          Inventories
+        </h2>
+        <div className="bg-white shadow-lg rounded-lg p-10 w-full">
           <table className="table-auto w-full">
             <thead>
               <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
