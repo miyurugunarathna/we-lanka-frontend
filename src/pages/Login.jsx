@@ -22,10 +22,10 @@ export const Login = () => {
     if (state.isLoggedIn) {
       switch (String(state.user?.role)) {
         case "SUPER_ADMIN":
-          navigate("/home");
+          navigate("/super-admin/home");
           break;
         case "ADMIN":
-          navigate("/home");
+          navigate("/admin");
           break;
         case "CONSUMER":
           navigate("/home");
