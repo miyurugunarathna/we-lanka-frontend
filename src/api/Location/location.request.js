@@ -11,8 +11,18 @@ const searchLocationsBasedOnACategoryId = async (categoryId, searchTerm) => {
   }
 };
 
+const getLocationList = async () => {
+  try {
+    const response = await apiInstance.get(`/api/locations`);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const locationRequest = {
   searchLocationsBasedOnACategoryId,
+  getLocationList,
 };
 
 export default locationRequest;

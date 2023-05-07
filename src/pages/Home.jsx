@@ -21,20 +21,22 @@ export const Home = () => {
   return (
     <div>
       <Navbar />
-      <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
-        Welcome to We Lanka!
-        {categories.map((category) => {
-          return (
-            <div key={category._id}>
-              <button
+      <div className="p-5 min-h-screen flex flex-col justify-center items-center antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
+        <h1 className="text-3xl font-bold mb-8">Categories</h1>
+        <div className="grid grid-cols-2 lg:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4 gap-2 ">
+          {categories.map((category) => {
+            return (
+              <div
+                key={category._id}
+                className="p-8 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer flex justify-center items-center"
                 onClick={() => {
                   navigateToLocation(category._id);
                 }}>
-                {category.name}
-              </button>
-            </div>
-          );
-        })}
+                <h3 className="text-lg font-medium mb-2">{category.name}</h3>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
