@@ -18,8 +18,9 @@ const viewCategoryById = async (id) => {
   }
 };
 
-const createCategory = async () => {
+const createCategory = async (data) => {
   try {
+    const response = await apiInstance.get(`/api/categories/${data}`);
     return response.data;
   } catch (err) {
     return err.response;
