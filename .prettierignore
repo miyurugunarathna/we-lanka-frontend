@@ -1,0 +1,13 @@
+tailwind.config.cjs
+postcss.config.cjs
+vite.config.js
+yarn.lock
+build/
+dist/
+.github/
+.idea/
+.vscode/
+node_modules/
+public/
+LICENSE
+README.md
