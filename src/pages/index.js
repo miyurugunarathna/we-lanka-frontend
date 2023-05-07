@@ -8,3 +8,5 @@ export * from "./HomeForSuperAdmin";
 export * from "./ListLocationForAdmin";
 export * from "./ListCategory";
 export * from "./ListInventoryForAdmin";
+export * from "./ListProductForAdmin";
+export * from "./ListCategoryForAdmin";

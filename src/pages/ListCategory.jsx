@@ -13,22 +13,15 @@ export const ListCategory = () => {
     });
   }, []);
 
-  const navigateToLocation = (categoryId) => {
-    navigate(`/locations/category/${categoryId}`);
-  };
-
   return (
-    <div>
-      <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
-        <div>Categories</div>
-
-        <div>
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-700 text-black dark:text-white">
+      <div className="p-5">
+        <h2 className="text-2xl font-medium mb-5">Categories</h2>
+        <div className="flex flex-wrap gap-3">
           {categories.map((category) => {
             return (
-              <div key={category._id} className="m-3">
-                <div>
-                  <span>{category.name}</span>
-                </div>
+              <div key={category._id} className="p-4 bg-gray-100 rounded-lg">
+                <h3 className="text-lg font-medium mb-2">{category.name}</h3>
               </div>
             );
           })}

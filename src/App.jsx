@@ -12,6 +12,8 @@ import {
   ListLocationForAdmin,
   ListCategory,
   ListInventoryForAdmin,
+  ListProductForAdmin,
+  ListCategoryForAdmin,
 } from "./pages";
 
 const App = () => {
@@ -28,7 +30,7 @@ const App = () => {
 
           {/* Location */}
           <Route path="/locations/category/:id" element={<ListLocation />} />
-          <Route path="/locations" element={<ListLocationForAdmin />} />
+          <Route path="/locations" element={<ListLocation />} />
 
           {/* Products */}
           <Route path="/products" element={<ListProduct />} />
@@ -38,7 +40,28 @@ const App = () => {
           <Route path="/super-admin/home" element={<HomeForSuperAdmin />} />
 
           {/* Inventory */}
-          <Route path="/inventories" element={<ListInventoryForAdmin />} />
+          <Route
+            path="/super-admin/inventories"
+            element={<ListInventoryForAdmin />}
+          />
+
+          {/* Products */}
+          <Route
+            path="/super-admin/products"
+            element={<ListProductForAdmin />}
+          />
+
+          {/* Location */}
+          <Route
+            path="/super-admin/locations"
+            element={<ListLocationForAdmin />}
+          />
+
+          {/* Categories */}
+          <Route
+            path="/super-admin/categories"
+            element={<ListCategoryForAdmin />}
+          />
         </Routes>
       </Router>
     </Provider>

@@ -25,37 +25,52 @@ export const ListInventoryForAdmin = () => {
 
   return (
     <div>
-      <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
-        Inventories
-        <div>
-          <table className="table table-striped">
+      <div className="min-h-screen flex flex-col justify-center items-center antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
+        <h2 className="text-lg font-medium mb-2 p-3">Inventories</h2>
+        <div className="bg-white shadow-lg rounded-lg p-10 w-full ml-5 mr-5">
+          <table className="table-auto w-full">
             <thead>
-              <tr>
-                <th className="p-3">Category</th>
-                <th className="p-3">Location</th>
-                <th className="p-3">Product Name</th>
-                <th className="p-3">Quantity</th>
-                <th>Actions</th>
+              <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <th className="py-3 px-6 text-left">Category</th>
+                <th className="py-3 px-6 text-left">Location</th>
+                <th className="py-3 px-6 text-left">Product Name</th>
+                <th className="py-3 px-6 text-left">Quantity</th>
+                <th className="py-3 px-6 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-gray-600 text-sm font-light">
               {inventories.map((inventory) => {
                 return (
-                  <tr key={inventory._id}>
-                    <td className="p-3">{inventory.categoryId.name}</td>
-                    <td className="p-3">{inventory.locationId.name}</td>
-                    <td className="p-3">{inventory.productId.name}</td>
-                    <td className="p-3">{inventory.quantity}</td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          navigateToEditInventory(inventory._id);
-                        }}>
-                        Edit
-                      </button>
+                  <tr
+                    key={inventory._id}
+                    className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6 text-left whitespace-nowrap">
+                      {inventory.categoryId.name}
                     </td>
-                    <td>
-                      <button onClick={() => {}}>Delete</button>
+                    <td className="py-3 px-6 text-left">
+                      {inventory.locationId.name}
+                    </td>
+                    <td className="py-3 px-6 text-left">
+                      {inventory.productId.name}
+                    </td>
+                    <td className="py-3 px-6 text-left">
+                      {inventory.quantity}
+                    </td>
+                    <td className="py-3 px-6 text-center">
+                      <div className="flex item-center justify-center">
+                        <button
+                          onClick={() => {
+                            navigateToEditInventory(inventory._id);
+                          }}
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2">
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => {}}
+                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
