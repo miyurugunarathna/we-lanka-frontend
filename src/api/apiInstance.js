@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = process.env.REACT_APP_BASE_URL;
+// const url = process.env.REACT_APP_BASE_URL;
 
 const apiInstance = axios.create({
   baseURL: "INVALID_URL",
@@ -8,7 +8,7 @@ const apiInstance = axios.create({
 
 apiInstance.interceptors.request.use(
   (config) => {
-    config.baseURL = url || "http://127.0.0.1:5173";
+    config.baseURL = "http://localhost:5000";
     config.headers = {
       Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     };
