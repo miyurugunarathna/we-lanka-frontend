@@ -22,6 +22,8 @@ import {
   EditProductForAdmin,
   EditCategoryForAdmin,
   EditLocationForAdmin,
+  Cart,
+  Order,
 } from "./pages";
 
 const App = () => {
@@ -110,6 +112,8 @@ const App = () => {
             path="/super-admin/categories/:id"
             element={<EditCategoryForAdmin />}
           />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Order />} />
         </Routes>
       </Router>
     </Provider>

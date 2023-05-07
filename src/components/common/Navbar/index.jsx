@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { BiCategory } from "react-icons/bi";
+import { BiCategory, BiCart } from "react-icons/bi";
 
 import userRequest from "../../../api/User/user.request";
 import useFetchUserProfile from "../../../hooks/useFetchUserProfile";
@@ -31,7 +31,17 @@ const Navbar = () => {
       role: [SUPERADMIN, ADMIN, CONSUMER],
     },
     {
-      name: "Cart",
+      name: "Orders",
+      url: "/orders",
+      role: [SUPERADMIN, ADMIN, CONSUMER],
+    },
+    {
+      name: (
+        <div className="flex items-center">
+          <p>Cart</p>
+          <BiCart size={18} />
+        </div>
+      ),
       url: "/cart",
       role: [CONSUMER, SUPERADMIN, ADMIN],
     },
