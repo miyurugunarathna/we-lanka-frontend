@@ -1,36 +1,46 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
+import productRequest from "../api/Product/product.request";
 import categoryRequest from "../api/Category/category.request";
 
 import { SUCCESS } from "../constants";
 
 export const CreateProductForAdmin = () => {
+  const [categories, setCategories] = useState([]);
+
   let navigate = useNavigate();
+
+  useEffect(() => {
+    categoryRequest.viewCategories().then((res) => {
+      if (res?.data) setCategories(res.data);
+    });
+  }, [categoryRequest]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
 
     let data = {
       name: e.target.name.value,
+      description: e.target.description.value,
+      price: e.target.price.value,
+      categoryId: e.target.categoryId.value,
     };
 
-    const res = await categoryRequest.createCategory(data);
+    const res = await productRequest.createProduct(data);
     if (res?.status === SUCCESS) {
       Swal.fire({
-        title: "Created successfully!",
-        text: "Category Created.",
+        title: "Success",
+        text: "Product Created Successfully.",
         confirmButtonText: "Okay",
-        showDenyButton: true,
-        denyButtonText: "Cancel",
       }).then((result) => {
-        if (result.isConfirmed) navigate("/super-admin/categories");
+        if (result.isConfirmed) navigate("/super-admin/products");
       });
     } else {
       Swal.fire(
-        "Category Creation failed!",
+        "Product Creation failed!",
         "Something went wrong. Please try again.",
         "error",
       );
@@ -62,6 +72,17 @@ export const CreateProductForAdmin = () => {
       name: "description",
       required: true,
       placeholder: "Description",
+    },
+    {
+      type: "select",
+      id: "categoryId",
+      name: "categoryId",
+      required: true,
+      placeholder: "categoryId",
+      options: categories.map((category) => ({
+        label: category.name,
+        value: category._id,
+      })),
     },
   ];
 
@@ -95,7 +116,7 @@ export const CreateProductForAdmin = () => {
                     onChange={handleRole}>
                     {i.options.map((option, key) => (
                       <option key={key} value={option.value}>
-                        {option.lable}
+                        {option.label}
                       </option>
                     ))}
                   </select>

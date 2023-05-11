@@ -45,9 +45,9 @@ export const ListProductForAdmin = () => {
                 className="h-48 w-full object-cover"
               />
               <div className="mt-4">
-                <h3 className="text-lg font-medium">{product.name}</h3>
+                <p className="mt-2 font-bold text-gray-600">{product.name}</p>
                 <p className="mt-2 text-gray-600">{product.description}</p>
-                <p className="font-bold text-gray-600">{product.price}</p>
+                <p className="mt-2 text-gray-600">Rs. {product.price}/=</p>
                 <div className="m-2">
                   <button
                     onClick={() => {
