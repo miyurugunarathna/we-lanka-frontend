@@ -29,10 +29,40 @@ const getLocationList = async () => {
   }
 };
 
+const editLocation = async (id, data) => {
+  try {
+    const response = await apiInstance.put(`/api/locations/${id}`, data);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
+const getLocationById = async (id) => {
+  try {
+    const response = await apiInstance.get(`/api/locations/${id}`);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
+const deleteLocation = async (id) => {
+  try {
+    const response = await apiInstance.delete(`/api/locations/${id}`);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const locationRequest = {
   searchLocationsBasedOnACategoryId,
   getLocationList,
   createLocation,
+  editLocation,
+  getLocationById,
+  deleteLocation,
 };
 
 export default locationRequest;

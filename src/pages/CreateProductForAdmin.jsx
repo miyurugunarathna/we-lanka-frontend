@@ -47,10 +47,6 @@ export const CreateProductForAdmin = () => {
     }
   };
 
-  const handleRole = (e) => {
-    setRole(e?.target?.value);
-  };
-
   const inputs = [
     {
       type: "text",
@@ -112,8 +108,7 @@ export const CreateProductForAdmin = () => {
                     key={key}
                     name={i.name}
                     id={i.id}
-                    className="mt-2 w-full border border-gray-300 rounded py-2 px-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500"
-                    onChange={handleRole}>
+                    className="mt-2 w-full border border-gray-300 rounded py-2 px-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500">
                     {i.options.map((option, key) => (
                       <option key={key} value={option.value}>
                         {option.label}

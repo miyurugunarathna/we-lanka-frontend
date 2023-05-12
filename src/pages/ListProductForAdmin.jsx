@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import productRequest from "../api/Product/product.request";
+import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const ListProductForAdmin = () => {
@@ -16,7 +17,36 @@ export const ListProductForAdmin = () => {
     navigate(`/super-admin/products/${id}`);
   };
 
-  useEffect(() => {
+  const navigateToBack = () => {
+    navigate(`/super-admin/home`);
+  };
+
+  const deleteProduct = (id) => {
+    Swal.fire({
+      title: "Are you sure to delete?",
+      text: "You won't be able to revert this!",
+      confirmButtonText: "Yes",
+      showDenyButton: true,
+      denyButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        productRequest
+          .deleteProduct(id)
+          .then(() => {
+            fetchData();
+          })
+          .catch(() => {
+            Swal.fire({
+              title: "Error!",
+              text: "Something went wrong",
+              confirmButtonText: "Ok",
+            });
+          });
+      }
+    });
+  };
+
+  const fetchData = () => {
     productRequest
       .viewProducts()
       .then((res) => {
@@ -25,6 +55,10 @@ export const ListProductForAdmin = () => {
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   return (
@@ -36,35 +70,44 @@ export const ListProductForAdmin = () => {
         Add new
       </button>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        {products.map((product) => {
-          return (
-            <div key={product._id} className="card p-4 m-3 bg-white shadow-md">
-              <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="h-48 w-full object-cover"
-              />
-              <div className="mt-4">
-                <p className="mt-2 font-bold text-gray-600">{product.name}</p>
-                <p className="mt-2 text-gray-600">{product.description}</p>
-                <p className="mt-2 text-gray-600">Rs. {product.price}/=</p>
-                <div className="m-2">
-                  <button
-                    onClick={() => {
-                      navigateToEdit(product._id);
-                    }}
-                    className="m-2 flex item-center px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-500">
-                    Edit
-                  </button>
-                  <button className="px-4 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-500">
-                    Delete
-                  </button>
+        {products.length > 0 ? (
+          products.map((product) => {
+            return (
+              <div
+                key={product._id}
+                className="card p-4 m-3 bg-white shadow-md">
+                <img src={product.image} className="h-48 w-full object-cover" />
+                <div className="mt-4">
+                  <p className="mt-2 font-bold text-gray-600">{product.name}</p>
+                  <p className="mt-2 text-gray-600">{product.description}</p>
+                  <p className="mt-2 text-gray-600">Rs. {product.price}/=</p>
+                  <div className="m-2">
+                    <button
+                      onClick={() => {
+                        navigateToEdit(product._id);
+                      }}
+                      className="m-2 flex item-center px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-500">
+                      Edit
+                    </button>
+                    <button
+                      className="px-4 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-500"
+                      onClick={() => deleteProduct(product._id)}>
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <div>There is no result to show!</div>
+        )}
       </div>
+      <button
+        onClick={navigateToBack}
+        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-20 m-10">
+        Return back
+      </button>
     </div>
   );
 };
