@@ -27,10 +27,20 @@ const viewProductById = async (id) => {
   }
 };
 
+const editProduct = async (id, data) => {
+  try {
+    const response = await apiInstance.put(`/api/products/${id}`, data);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const productRequest = {
   viewProducts,
   viewProductById,
   createProduct,
+  editProduct,
 };
 
 export default productRequest;

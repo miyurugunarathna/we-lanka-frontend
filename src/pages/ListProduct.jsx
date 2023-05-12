@@ -31,7 +31,7 @@ export const ListProduct = () => {
                 key={product._id}
                 className="card p-4 m-3 bg-white shadow-md">
                 <img
-                  src={product.imageUrl}
+                  src={product.image}
                   alt={product.name}
                   className="h-48 w-full object-cover"
                 />

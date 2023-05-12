@@ -37,13 +37,10 @@ export const ListProductForAdmin = () => {
       </button>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {products.map((product) => {
+          console.log(product.image);
           return (
             <div key={product._id} className="card p-4 m-3 bg-white shadow-md">
-              <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="h-48 w-full object-cover"
-              />
+              <img src={product.image} className="h-48 w-full object-cover" />
               <div className="mt-4">
                 <p className="mt-2 font-bold text-gray-600">{product.name}</p>
                 <p className="mt-2 text-gray-600">{product.description}</p>

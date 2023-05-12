@@ -27,10 +27,20 @@ const createCategory = async (data) => {
   }
 };
 
+const editCategory = async (id, data) => {
+  try {
+    const response = await apiInstance.put(`/api/categories/${id}`, data);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const categoryRequest = {
   viewCategories,
   viewCategoryById,
   createCategory,
+  editCategory,
 };
 
 export default categoryRequest;
