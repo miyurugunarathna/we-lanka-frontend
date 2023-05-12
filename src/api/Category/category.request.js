@@ -36,11 +36,21 @@ const editCategory = async (id, data) => {
   }
 };
 
+const deleteCategory = async (id) => {
+  try {
+    const response = await apiInstance.delete(`/api/categories/${id}`);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const categoryRequest = {
   viewCategories,
   viewCategoryById,
   createCategory,
   editCategory,
+  deleteCategory,
 };
 
 export default categoryRequest;

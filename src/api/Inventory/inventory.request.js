@@ -27,10 +27,20 @@ const getInventoryList = async () => {
   }
 };
 
+const deleteInventory = async (id) => {
+  try {
+    const response = await apiInstance.delete(`/api/inventories/${id}`);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const inventoryRequest = {
   getInventoryById,
   getInventoryList,
   createInventory,
+  deleteInventory,
 };
 
 export default inventoryRequest;

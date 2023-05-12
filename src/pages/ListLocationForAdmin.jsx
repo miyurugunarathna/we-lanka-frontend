@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import locationRequest from "../api/Location/location.request";
+import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const ListLocationForAdmin = () => {
@@ -16,7 +17,36 @@ export const ListLocationForAdmin = () => {
     navigate(`/super-admin/locations/${id}`);
   };
 
-  useEffect(() => {
+  const navigateToBack = () => {
+    navigate(`/super-admin/home`);
+  };
+
+  const deleteLocation = (id) => {
+    Swal.fire({
+      title: "Are you sure to delete?",
+      text: "You won't be able to revert this!",
+      confirmButtonText: "Yes",
+      showDenyButton: true,
+      denyButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        locationRequest
+          .deleteLocation(id)
+          .then(() => {
+            fetchData();
+          })
+          .catch(() => {
+            Swal.fire({
+              title: "Error!",
+              text: "Something went wrong",
+              confirmButtonText: "Ok",
+            });
+          });
+      }
+    });
+  };
+
+  const fetchData = () => {
     locationRequest
       .getLocationList()
       .then((res) => {
@@ -25,6 +55,10 @@ export const ListLocationForAdmin = () => {
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   return (
@@ -52,7 +86,9 @@ export const ListLocationForAdmin = () => {
                     className="m-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-500">
                     Edit
                   </button>
-                  <button className="px-4 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-500">
+                  <button
+                    className="px-4 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-500"
+                    onClick={() => deleteLocation(location._id)}>
                     Delete
                   </button>
                 </div>
@@ -61,6 +97,11 @@ export const ListLocationForAdmin = () => {
           );
         })}
       </div>
+      <button
+        onClick={navigateToBack}
+        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-20 ml-5">
+        Return back
+      </button>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import inventoryRequest from "../api/Inventory/inventory.request";
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export const ListInventoryForAdmin = () => {
   const navigate = useNavigate();
@@ -16,7 +17,36 @@ export const ListInventoryForAdmin = () => {
     navigate(`/super-admin/inventories/add`);
   };
 
-  useEffect(() => {
+  const navigateToBack = () => {
+    navigate(`/super-admin/home`);
+  };
+
+  const deleteInventory = (id) => {
+    Swal.fire({
+      title: "Are you sure to delete?",
+      text: "You won't be able to revert this!",
+      confirmButtonText: "Yes",
+      showDenyButton: true,
+      denyButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        inventoryRequest
+          .deleteInventory(id)
+          .then(() => {
+            fetchData();
+          })
+          .catch(() => {
+            Swal.fire({
+              title: "Error!",
+              text: "Something went wrong",
+              confirmButtonText: "Ok",
+            });
+          });
+      }
+    });
+  };
+
+  const fetchData = () => {
     inventoryRequest
       .getInventoryList()
       .then((res) => {
@@ -25,6 +55,10 @@ export const ListInventoryForAdmin = () => {
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   return (
@@ -77,7 +111,9 @@ export const ListInventoryForAdmin = () => {
                           Edit
                         </button>
                         <button
-                          onClick={() => {}}
+                          onClick={() => {
+                            deleteInventory(inventory._id);
+                          }}
                           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
                           Delete
                         </button>
@@ -89,6 +125,11 @@ export const ListInventoryForAdmin = () => {
             </tbody>
           </table>
         </div>
+        <button
+          onClick={navigateToBack}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-20 m-10">
+          Return back
+        </button>
       </div>
     </div>
   );

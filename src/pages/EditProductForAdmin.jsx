@@ -22,7 +22,6 @@ export const EditProductForAdmin = () => {
 
   useEffect(() => {
     productRequest.viewProductById(params.id).then((res) => {
-      console.log(res.data);
       if (res?.data) setProduct(res.data);
     });
   }, [productRequest]);
