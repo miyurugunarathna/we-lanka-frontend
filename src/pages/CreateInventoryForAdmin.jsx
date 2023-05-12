@@ -4,56 +4,65 @@ import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import userRequest from "../api/User/user.request";
+import categoryRequest from "../api/Category/category.request";
+import productRequest from "../api/Product/product.request";
+import locationRequest from "../api/Location/location.request";
+import inventoryRequest from "../api/Inventory/inventory.request";
+
 import useFetchUserProfile from "../hooks/useFetchUserProfile";
 
 import { SUCCESS } from "../constants";
 
 export const CreateInventoryForAdmin = () => {
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [locations, setLocation] = useState([]);
   const [role, setRole] = useState(null);
   let navigate = useNavigate();
   const state = useSelector((state) => state.user);
 
   useFetchUserProfile();
 
+  useEffect(() => {
+    categoryRequest.viewCategories().then((res) => {
+      if (res?.data) setCategories(res.data);
+    });
+  }, [categoryRequest]);
+
+  useEffect(() => {
+    productRequest.viewProducts().then((res) => {
+      if (res?.data) setProducts(res.data);
+    });
+  }, [productRequest]);
+
+  useEffect(() => {
+    locationRequest.getLocationList().then((res) => {
+      if (res?.data) setLocation(res.data);
+    });
+  }, [locationRequest]);
+
   const handleRegister = async (e) => {
     e.preventDefault();
-    let role;
-    switch (e.target.role.value) {
-      case "SUPER_ADMIN":
-        role = "SUPER_ADMIN";
-        break;
-      case "ADMIN":
-        role = "ADMIN";
-        break;
-      case "CONSUMER":
-        role = "CONSUMER";
-        break;
-      default:
-        role = null;
-    }
 
     let data = {
-      name: e.target.name.value,
-      email: e.target.email.value,
-      mobile: e.target.mobile.value,
-      role: role,
-      password: e.target.password.value,
+      categoryId: e.target.categoryId.value,
+      locationId: e.target.locationId.value,
+      productId: e.target.productId.value,
+      quantity: e.target.quantity.value,
     };
 
-    const res = await userRequest.addUser(data);
+    const res = await inventoryRequest.createInventory(data);
     if (res?.status === SUCCESS) {
       Swal.fire({
-        title: "Registration success!",
-        text: "Click okay to login.",
+        title: "Success",
+        text: "Inventory Created Successfully",
         confirmButtonText: "Okay",
-        showDenyButton: true,
-        denyButtonText: "Cancel",
       }).then((result) => {
-        if (result.isConfirmed) navigate("/");
+        if (result.isConfirmed) navigate("/super-admin/inventories");
       });
     } else {
       Swal.fire(
-        "Registration failed!",
+        "Inventory Creation failed!",
         "Something went wrong. Please try again.",
         "error",
       );
@@ -67,41 +76,41 @@ export const CreateInventoryForAdmin = () => {
   const inputs = [
     {
       type: "select",
-      id: "category",
-      name: "category",
+      id: "categoryId",
+      name: "categoryId",
       required: true,
       placeholder: "Category",
-      options: [
-        { lable: "Food", value: "SUPER_ADMIN" },
-        { lable: "Drink", value: "ADMIN" },
-      ],
+      options: categories.map((category) => ({
+        label: category.name,
+        value: category._id,
+      })),
     },
     {
       type: "select",
-      id: "email",
-      name: "email",
+      id: "locationId",
+      name: "locationId",
       required: true,
       placeholder: "Location",
-      options: [
-        { lable: "Colombo", value: "SUPER_ADMIN" },
-        { lable: "Ella", value: "ADMIN" },
-      ],
+      options: locations.map((location) => ({
+        label: location.name,
+        value: location._id,
+      })),
     },
     {
       type: "select",
-      id: "mobile",
-      name: "mobile",
+      id: "productId",
+      name: "productId",
       required: true,
       placeholder: "Product",
-      options: [
-        { lable: "elephant", value: "SUPER_ADMIN" },
-        { lable: "cat", value: "ADMIN" },
-      ],
+      options: products.map((product) => ({
+        label: product.name,
+        value: product._id,
+      })),
     },
     {
       type: "number",
-      id: "role",
-      name: "role",
+      id: "quantity",
+      name: "quantity",
       required: true,
       placeholder: "Quantity",
     },
@@ -137,7 +146,7 @@ export const CreateInventoryForAdmin = () => {
                     onChange={handleRole}>
                     {i.options.map((option, key) => (
                       <option key={key} value={option.value}>
-                        {option.lable}
+                        {option.label}
                       </option>
                     ))}
                   </select>

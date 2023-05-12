@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-import categoryRequest from "../api/Category/category.request";
+import locationRequest from "../api/Location/location.request";
 
 import { SUCCESS } from "../constants";
 
@@ -17,20 +15,18 @@ export const CreateLocationForAdmin = () => {
       name: e.target.name.value,
     };
 
-    const res = await categoryRequest.createCategory(data);
+    const res = await locationRequest.createLocation(data);
     if (res?.status === SUCCESS) {
       Swal.fire({
-        title: "Created successfully!",
-        text: "Category Created.",
+        title: "Success",
+        text: "Location Created Successfully.",
         confirmButtonText: "Okay",
-        showDenyButton: true,
-        denyButtonText: "Cancel",
       }).then((result) => {
-        if (result.isConfirmed) navigate("/super-admin/categories");
+        if (result.isConfirmed) navigate("/super-admin/locations");
       });
     } else {
       Swal.fire(
-        "Category Creation failed!",
+        "Location Creation failed!",
         "Something went wrong. Please try again.",
         "error",
       );
