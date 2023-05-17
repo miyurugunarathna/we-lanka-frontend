@@ -117,9 +117,9 @@ export const EditProductForAdmin = () => {
 
   return (
     <div className="flex items-center min-h-screen p-10 bg-gray-50">
-      <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
-        <div className="flex flex-col overflow-y-auto md:flex-row">
-          <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
+      <div className="flex-1 overflow-hidden bg-white rounded-lg shadow-xl">
+        <div className="flex flex-col items-center justify-center overflow-y-auto md:flex-row">
+          <main className="flex items-center sm:p-12 md:w-1/2">
             <form className="w-full" onSubmit={handleUpdate}>
               <h1 className="mb-4 text-3xl font-bold text-center tracking-tight text-gray-800">
                 Edit Product
