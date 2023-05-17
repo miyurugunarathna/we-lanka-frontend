@@ -8,6 +8,10 @@ import { SUCCESS } from "../constants";
 export const CreateLocationForAdmin = () => {
   let navigate = useNavigate();
 
+  const navigateToBack = () => {
+    navigate("/super-admin/locations");
+  };
+
   const handleCreate = async (e) => {
     e.preventDefault();
 
@@ -49,9 +53,9 @@ export const CreateLocationForAdmin = () => {
 
   return (
     <div className="flex items-center min-h-screen p-10 bg-gray-50">
-      <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
-        <div className="flex flex-col overflow-y-auto md:flex-row">
-          <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
+      <div className="flex-1 overflow-hidden bg-white rounded-lg shadow-xl">
+        <div className="flex flex-col items-center justify-center overflow-y-auto md:flex-row">
+          <main className="flex items-center sm:p-12 md:w-1/2">
             <form className="w-full" onSubmit={handleCreate}>
               <h1 className="mb-4 text-3xl font-bold text-center tracking-tight text-gray-800">
                 Add Location
@@ -87,7 +91,9 @@ export const CreateLocationForAdmin = () => {
               <button className="mt-8 py-2 rounded text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-50 w-full">
                 Add
               </button>
-              <button className="mt-8 py-2 rounded text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring focus:ring-gray-900 focus:ring-opacity-50 w-full">
+              <button
+                className="mt-8 py-2 rounded text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring focus:ring-gray-900 focus:ring-opacity-50 w-full"
+                onClick={navigateToBack}>
                 Go back
               </button>
             </form>
