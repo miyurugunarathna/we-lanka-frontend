@@ -66,7 +66,7 @@ const Navbar = () => {
           </div>
           <div className="hidden lg:flex gap-3 items-center">
             {navs.map((nav, key) =>
-              nav.role.includes(role) ? (
+              nav.role.includes(role) && role !== SUPERADMIN ? (
                 <NavLink
                   key={key}
                   className={({ isActive }) =>

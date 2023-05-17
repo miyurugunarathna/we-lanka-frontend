@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import inventoryRequest from "../api/Inventory/inventory.request";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import Navbar from "../components/common/Navbar";
 
 export const ListInventoryForAdmin = () => {
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ export const ListInventoryForAdmin = () => {
 
   return (
     <div>
+      <Navbar />
       <div className="min-h-screen flex flex-col antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
         <button
           onClick={navigateToAddInventory}
