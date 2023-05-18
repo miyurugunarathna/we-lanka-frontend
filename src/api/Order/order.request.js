@@ -9,3 +9,12 @@ export const getOrders = async () => {
     return err.response;
   }
 };
+
+export const placeOrder = async (data) => {
+  try {
+    const response = await apiInstance.post(`/api/orders/`, data);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};

@@ -8,7 +8,7 @@ const apiInstance = axios.create({
 
 apiInstance.interceptors.request.use(
   (config) => {
-    config.baseURL = "http://localhost:5000";
+    config.baseURL = "https://we-lanka-backend.up.railway.app";
     config.headers = {
       Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     };

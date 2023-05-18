@@ -103,7 +103,7 @@ export const Order = () => {
                 </div>
               </div>
             ) : (
-              <div className="mt-8">
+              <div className="mt-8 w-full">
                 <h2 className="text-4xl uppercase font-semibold text-center">
                   Orders
                 </h2>
@@ -111,27 +111,31 @@ export const Order = () => {
                   <div className="p-2 border-t border-b border-slate-200 text-xl">
                     History
                   </div>
-                  {orders.map((item) => (
-                    <div
-                      onClick={() => clickOrder(item._id)}
-                      className="flex gap-4">
-                      <img
-                        className="w-24 h-24 bg-slate-200 object-cover object-center border rounded border-slate-200"
-                        src={item.items[0].item.image}
-                      />
-                      <div className="flex flex-col items-start justify-between gap-3">
-                        <div className="flex flex-col gap-1">
-                          <h5 className="text-lg font-semibold">
-                            {`Order Number: ${item._id}`}
-                          </h5>
-                          <h6>{`${item.items.length} items`}</h6>
+                  {orders.length ? (
+                    orders.map((item) => (
+                      <div
+                        onClick={() => clickOrder(item._id)}
+                        className="flex gap-4">
+                        <img
+                          className="w-24 h-24 bg-slate-200 object-cover object-center border rounded border-slate-200"
+                          src={item.items[0].item.image}
+                        />
+                        <div className="flex flex-col items-start justify-between gap-3">
+                          <div className="flex flex-col gap-1">
+                            <h5 className="text-lg font-semibold">
+                              {`Order Number: ${item._id}`}
+                            </h5>
+                            <h6>{`${item.items.length} items`}</h6>
+                          </div>
+                          <span className="text-lg font-semibold">{`LKR ${calculateTotal(
+                            item,
+                          )}`}</span>
                         </div>
-                        <span className="text-lg font-semibold">{`LKR ${calculateTotal(
-                          item,
-                        )}`}</span>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <div className="text-center">You have no orders yet 😟</div>
+                  )}
                 </div>
               </div>
             )}

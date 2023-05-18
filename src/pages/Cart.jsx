@@ -1,12 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { BiTrash, BiPlus, BiMinus } from "react-icons/bi";
 import Swal from "sweetalert2";
 import Navbar from "../components/common/Navbar";
-import { getCart, modifyCart } from "../api/Cart/cart.request";
+import { useNavigate } from "react-router-dom";
+import useFetchCart from "../hooks/useFetchCart";
+import { modifyCart } from "../api/Cart/cart.request";
+import { placeOrder } from "../api/Order/order.request";
 
 export const Cart = () => {
-  const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { cart, loading, setCart, setLoading } = useFetchCart();
 
   const deleteItem = (id) => {
     Swal.fire({
@@ -72,12 +75,48 @@ export const Cart = () => {
     return total;
   }, [cart]);
 
-  useEffect(() => {
-    getCart().then((res) => {
-      setCart(res.data?.items ? res.data.items : []);
-      setLoading(false);
-    });
-  }, []);
+  const checkout = () => {
+    setLoading(true);
+    placeOrder(
+      cart.map((item) => ({
+        item: item.item._id,
+        quantity: item.quantity,
+      })),
+    )
+      .then((order) => {
+        modifyCart([])
+          .then(() => {
+            setCart([]);
+            setLoading(false);
+            Swal.fire({
+              icon: "success",
+              title: "Order placed!",
+              text: "Your order has been placed successfully",
+              confirmButtonText: "View order",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                navigate(`/orders?id=${order.data._id}`);
+              }
+            });
+          })
+          .catch(() => {
+            Swal.fire({
+              title: "Error!",
+              text: "Something went wrong",
+              confirmButtonText: "Ok",
+            });
+            setLoading(false);
+          });
+      })
+      .catch(() => {
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong",
+          confirmButtonText: "Ok",
+        });
+        setLoading(false);
+      });
+  };
 
   return (
     <div>
@@ -90,12 +129,12 @@ export const Cart = () => {
               <div className="flex justify-center items-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-slate-300"></div>
               </div>
-            ) : (
+            ) : cart.length ? (
               cart.map((item) => (
                 <div className="flex gap-4">
                   <img
                     className="w-36 h-36 bg-slate-200 object-cover object-center border rounded border-slate-200"
-                    src={item.item.image}
+                    src={item.item?.image}
                   />
                   <div className="flex flex-col items-start justify-between gap-3">
                     <div className="flex flex-col gap-1">
@@ -124,6 +163,8 @@ export const Cart = () => {
                   </div>
                 </div>
               ))
+            ) : (
+              <div>You have no items in the Cart</div>
             )}
           </div>
         </div>
@@ -140,7 +181,10 @@ export const Cart = () => {
                   <p>Total</p>
                   <p>{`LKR ${calculateTotal()}`}</p>
                 </div>
-                <button className="flex w-full justify-center items-center bg-slate-900 rounded-full p-2 text-white">
+                <button
+                  disabled={!cart.length}
+                  onClick={checkout}
+                  className="flex w-full justify-center items-center disabled:bg-slate-200 bg-slate-900 rounded-full p-2 text-white">
                   Checkout
                 </button>
               </>
