@@ -1,15 +1,17 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { BiTrash, BiPlus, BiMinus } from "react-icons/bi";
 import Swal from "sweetalert2";
 import Navbar from "../components/common/Navbar";
 import { useNavigate } from "react-router-dom";
 import useFetchCart from "../hooks/useFetchCart";
 import { modifyCart } from "../api/Cart/cart.request";
+import inventoryRequest from "../api/Inventory/inventory.request";
 import { placeOrder } from "../api/Order/order.request";
 
 export const Cart = () => {
   const navigate = useNavigate();
   const { cart, loading, setCart, setLoading } = useFetchCart();
+  const [inventories, setInventory] = useState([]);
 
   const deleteItem = (id) => {
     Swal.fire({
@@ -21,6 +23,25 @@ export const Cart = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const newCart = cart.filter((item) => item.item._id !== id);
+
+        getInventories();
+
+        const deleteItem = cart.find((item) => item.item._id === id);
+
+        const deleteInventoryItem = inventories.find(
+          (i) => i.productId._id === deleteItem.item._id,
+        );
+
+        console.log(deleteInventoryItem);
+
+        deleteInventoryItem.quantity =
+          deleteInventoryItem.quantity + deleteItem.quantity;
+
+        inventoryRequest.editInventory(
+          deleteInventoryItem._id,
+          deleteInventoryItem,
+        );
+
         modifyCart(
           newCart.map((item) => ({
             item: item.item._id,
@@ -42,25 +63,73 @@ export const Cart = () => {
   };
 
   const increaseQuantity = (id) => {
+    getInventories();
+
     const newCart = cart.map((item) => {
       if (item.item._id === id) {
-        return {
-          ...item,
-          quantity: item.quantity + 1,
-        };
+        const inventoryProduct = inventories.find(
+          (i) => i.productId._id === item.item._id,
+        );
+
+        if (inventoryProduct.quantity > 0) {
+          inventoryProduct.quantity -= 1;
+
+          inventoryRequest.editInventory(
+            inventoryProduct._id,
+            inventoryProduct,
+          );
+
+          getInventories();
+
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          };
+        } else {
+          Swal.fire({
+            title: "Not enough stock",
+            text: "There is no enough stock!.",
+            confirmButtonText: "Okay",
+          }).then((result) => {
+            if (result.isConfirmed) navigate("/cart");
+          });
+        }
       }
       return item;
     });
     setCart(newCart);
   };
 
+  function getInventories() {
+    inventoryRequest.getInventoryList().then((data) => {
+      setInventory(data.data);
+    });
+  }
+
   const decreaseQuantity = (id) => {
+    getInventories();
+
     const newCart = cart.map((item) => {
       if (item.item._id === id) {
-        return {
-          ...item,
-          quantity: item.quantity - 1 === 0 ? 1 : item.quantity - 1,
-        };
+        const inventoryProduct = inventories.find(
+          (i) => i.productId._id === item.item._id,
+        );
+
+        if (item.quantity > 1) {
+          inventoryProduct.quantity += 1;
+
+          inventoryRequest.editInventory(
+            inventoryProduct._id,
+            inventoryProduct,
+          );
+
+          getInventories();
+
+          return {
+            ...item,
+            quantity: item.quantity - 1 === 0 ? 1 : item.quantity - 1,
+          };
+        }
       }
       return item;
     });

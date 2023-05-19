@@ -1,111 +1,131 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-
-import userRequest from "../api/User/user.request";
+import productRequest from "../api/Product/product.request";
+import categoryRequest from "../api/Category/category.request";
+import locationRequest from "../api/Location/location.request";
+import inventoryRequest from "../api/Inventory/inventory.request";
 import useFetchUserProfile from "../hooks/useFetchUserProfile";
 
 import { SUCCESS } from "../constants";
 
 export const EditInventoryDetailForAdmin = () => {
-  const [role, setRole] = useState(null);
+  const [inventory, setInventory] = useState({
+    quantity: 0,
+    productId: "",
+    categoryId: "",
+    locationId: "",
+  });
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [locations, setLocation] = useState([]);
   let navigate = useNavigate();
-  const state = useSelector((state) => state.user);
+  let params = useParams();
 
   useFetchUserProfile();
+
+  useEffect(() => {
+    inventoryRequest.getInventoryById(params.id).then((res) => {
+      if (res?.data) setInventory(res.data);
+    });
+  }, [productRequest]);
+
+  useEffect(() => {
+    categoryRequest.viewCategories().then((res) => {
+      if (res?.data) setCategories(res.data);
+    });
+  }, [categoryRequest]);
+
+  useEffect(() => {
+    productRequest.viewProducts().then((res) => {
+      if (res?.data) setProducts(res.data);
+    });
+  }, [productRequest]);
+
+  useEffect(() => {
+    locationRequest.getLocationList().then((res) => {
+      if (res?.data) setLocation(res.data);
+    });
+  }, [locationRequest]);
 
   const navigateToBack = () => {
     navigate("/super-admin/inventories");
   };
 
-  const handleRegister = async (e) => {
+  const handleChange = (event) => {
+    setInventory({
+      ...inventory,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    let role;
-    switch (e.target.role.value) {
-      case "SUPER_ADMIN":
-        role = "SUPER_ADMIN";
-        break;
-      case "ADMIN":
-        role = "ADMIN";
-        break;
-      case "CONSUMER":
-        role = "CONSUMER";
-        break;
-      default:
-        role = null;
-    }
 
     let data = {
-      name: e.target.name.value,
-      email: e.target.email.value,
-      mobile: e.target.mobile.value,
-      role: role,
-      password: e.target.password.value,
+      categoryId: e.target.categoryId.value,
+      locationId: e.target.locationId.value,
+      productId: e.target.productId.value,
+      quantity: e.target.quantity.value,
     };
 
-    const res = await userRequest.addUser(data);
+    const res = await inventoryRequest.editInventory(params.id, data);
     if (res?.status === SUCCESS) {
       Swal.fire({
-        title: "Registration success!",
-        text: "Click okay to login.",
+        title: "Success",
+        text: "Inventory Updated Successfully!",
         confirmButtonText: "Okay",
-        showDenyButton: true,
-        denyButtonText: "Cancel",
       }).then((result) => {
-        if (result.isConfirmed) navigate("/");
+        if (result.isConfirmed) navigate("/super-admin/inventories");
       });
     } else {
       Swal.fire(
-        "Registration failed!",
+        "Inventory Updation failed!",
         "Something went wrong. Please try again.",
         "error",
       );
     }
   };
 
-  const handleRole = (e) => {
-    setRole(e?.target?.value);
-  };
-
   const inputs = [
     {
       type: "select",
-      id: "category",
-      name: "category",
+      id: "categoryId",
+      name: "categoryId",
       required: true,
       placeholder: "Category",
-      options: [
-        { lable: "Food", value: "SUPER_ADMIN" },
-        { lable: "Drink", value: "ADMIN" },
-      ],
+      options: categories.map((category) => ({
+        label: category.name,
+        value: category._id,
+      })),
     },
     {
       type: "select",
-      id: "email",
-      name: "email",
+      id: "locationId",
+      name: "locationId",
       required: true,
       placeholder: "Location",
-      options: [
-        { lable: "Colombo", value: "SUPER_ADMIN" },
-        { lable: "Ella", value: "ADMIN" },
-      ],
+      options: locations.map((location) => ({
+        label: location.name,
+        value: location._id,
+      })),
     },
     {
       type: "select",
-      id: "mobile",
-      name: "mobile",
+      id: "productId",
+      name: "productId",
       required: true,
       placeholder: "Product",
-      options: [
-        { lable: "elephant", value: "SUPER_ADMIN" },
-        { lable: "cat", value: "ADMIN" },
-      ],
+      options: products.map((product) => ({
+        label: product.name,
+        value: product._id,
+      })),
     },
     {
       type: "number",
-      id: "role",
-      name: "role",
+      id: "quantity",
+      name: "quantity",
+      value: inventory.quantity,
       required: true,
       placeholder: "Quantity",
     },
@@ -113,10 +133,10 @@ export const EditInventoryDetailForAdmin = () => {
 
   return (
     <div className="flex items-center min-h-screen p-10 bg-gray-50">
-      <div className="flex-1 h-full mx-auto items-center justify-center bg-white rounded shadow-xl">
-        <div className="flex flex-col w-83 items-center justify-center">
+      <div className="flex-1 overflow-hidden bg-white rounded-lg shadow-xl">
+        <div className="flex flex-col items-center justify-center overflow-y-auto md:flex-row">
           <main className="flex items-center sm:p-12 md:w-1/2">
-            <form className="w-full" onSubmit={handleRegister}>
+            <form className="w-full" onSubmit={handleUpdate}>
               <h1 className="mb-4 text-3xl font-bold text-center tracking-tight text-gray-800">
                 <span className="font-normal">Edit Inventory</span>
               </h1>
@@ -128,20 +148,21 @@ export const EditInventoryDetailForAdmin = () => {
                     className="mt-2 w-full border rounded py-1 px-3"
                     type={i.type}
                     id={i.id}
+                    value={i.value}
                     name={i.name}
                     required={i.required}
                     placeholder={i.placeholder}
+                    onChange={handleChange}
                   />
                 ) : (
                   <select
                     key={key}
                     name={i.name}
                     id={i.id}
-                    className="mt-2 w-full border rounded py-1 px-2"
-                    onChange={handleRole}>
+                    className="mt-2 w-full border rounded py-1 px-2">
                     {i.options.map((option, key) => (
                       <option key={key} value={option.value}>
-                        {option.lable}
+                        {option.label}
                       </option>
                     ))}
                   </select>
