@@ -50,7 +50,7 @@ const inventoryRequest = {
   getInventoryList,
   createInventory,
   deleteInventory,
-  editInventory
+  editInventory,
 };
 
 export default inventoryRequest;
