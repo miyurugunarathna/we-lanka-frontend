@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import Swal from "sweetalert2";
 
 import productRequest from "../api/Product/product.request";
 import categoryRequest from "../api/Category/category.request";
 
 import { SUCCESS } from "../constants";
+import { storage } from "../utils/firebase";
 
 export const CreateProductForAdmin = () => {
+  const [image, setImage] = useState("");
   const [categories, setCategories] = useState([]);
 
   let navigate = useNavigate();
@@ -23,14 +25,44 @@ export const CreateProductForAdmin = () => {
     navigate("/super-admin/products");
   };
 
+  const imageHandle = (e) => {
+    e.preventDefault();
+    const file = e.target.files?.[0];
+    uploadFile(file);
+  };
+
+  const uploadFile = (file) => {
+    if (!file) return;
+    const storageRef = ref(storage, `/a${file?.name}${new Date().getTime()}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+        );
+      },
+      (error) =>
+        Swal.fire("Something went wrong!", "Please, try again later.", "error"),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          setImage(downloadURL);
+        });
+      },
+    );
+  };
+
   const handleCreate = async (e) => {
     e.preventDefault();
 
-    let data = {
+    const data = {
       name: e.target.name.value,
       description: e.target.description.value,
-      price: e.target.price.value,
       categoryId: e.target.categoryId.value,
+      image: image,
+      price: e.target.price.value,
     };
 
     const res = await productRequest.createProduct(data);
@@ -58,6 +90,13 @@ export const CreateProductForAdmin = () => {
       name: "name",
       required: true,
       placeholder: "Name",
+    },
+    {
+      type: "file",
+      id: "image",
+      name: "image",
+      required: false,
+      placeholder: "image",
     },
     {
       type: "number",
@@ -106,6 +145,7 @@ export const CreateProductForAdmin = () => {
                     name={i.name}
                     required={i.required}
                     placeholder={i.placeholder}
+                    onChange={imageHandle}
                   />
                 ) : (
                   <select
