@@ -36,11 +36,21 @@ const deleteInventory = async (id) => {
   }
 };
 
+const editInventory = async (id, data) => {
+  try {
+    const response = await apiInstance.put(`/api/inventories/${id}`, data);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 const inventoryRequest = {
   getInventoryById,
   getInventoryList,
   createInventory,
   deleteInventory,
+  editInventory,
 };
 
 export default inventoryRequest;
