@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -7,6 +7,7 @@ import productRequest from "../api/Product/product.request";
 import categoryRequest from "../api/Category/category.request";
 
 import { SUCCESS } from "../constants";
+import { storage } from "../utils/firebase";
 
 export const EditProductForAdmin = () => {
   const [product, setProduct] = useState({
@@ -32,14 +33,33 @@ export const EditProductForAdmin = () => {
     });
   }, [categoryRequest]);
 
+  const uploadFile = (file) => {
+    if (!file) return;
+    const storageRef = ref(storage, `/a${file?.name}${new Date().getTime()}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+        );
+      },
+      (error) =>
+        Swal.fire("Something went wrong!", "Please, try again later.", "error"),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          setProduct((image) => ({ ...image, ["image"]: downloadURL }));
+        });
+      },
+    );
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    let data = {
-      name: e.target.name.value,
-    };
-
-    const res = await productRequest.editProduct(params.id, data);
+    const res = await productRequest.editProduct(params.id, product);
     if (res?.status === SUCCESS) {
       Swal.fire({
         title: "Success",
@@ -62,10 +82,14 @@ export const EditProductForAdmin = () => {
   };
 
   const handleChange = (event) => {
+    event.preventDefault();
     setProduct({
       ...product,
       [event.target.name]: event.target.value,
     });
+
+    const file = event.target.files?.[0];
+    uploadFile(file);
   };
 
   const inputs = [
@@ -106,12 +130,11 @@ export const EditProductForAdmin = () => {
       })),
     },
     {
-      type: "image",
+      type: "file",
       id: "image",
       name: "image",
-      required: true,
+      required: false,
       placeholder: "Image",
-      value: product.image,
     },
   ];
 
